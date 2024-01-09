@@ -48,3 +48,39 @@
     color: red !important;
   }
 
+  .modal-user-container{
+
+    .modal-header{
+      button{
+        background: transparent !important;
+        border: none;
+        color: white;
+        font-size: 20px;
+      }
+    }
+    .modal-user-body{
+      display: flex;
+      flex-wrap: wrap;
+      gap: 15px;
+      .input-container{
+        display: flex;
+        flex-direction: column;
+        width: 49%;
+
+      &.max-width-input{
+          width: 100%;
+        }
+        input{
+          border-radius: 3px;
+          border: 1px solid gray;
+          height: 30px;
+          outline: none;
+          padding: 0 10px;
+        }
+      }
+    }
+    
+  }
+
+
+
