@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { FormattedMessage } from 'react-intl';
 import { connect } from 'react-redux';
 import './UserManage.scss';
-import {getAllUsers} from '../../services/userService'
+import {getAllUsers, createNewUserService} from '../../services/userService'
 import modalUser from './modalUser';
 import ModalUser from './modalUser';
 class UserManage extends Component {
@@ -21,17 +21,19 @@ class UserManage extends Component {
 
     async componentDidMount() {
         try {
-            let response = await getAllUsers('ALL');
-            // console.log('check render 1', response);
+            await this.getAllUserFromReact()
+        } catch (error) {
+            console.error('Error fetching users:', error);
+        }
+    }
+
+    getAllUserFromReact = async() => {
+        let response = await getAllUsers('ALL');
             if (response && response.errCode === 0) {
-                // console.log('check render 2', response.users);
                 this.setState({
                     arrUser: response.users
                 });
             }
-        } catch (error) {
-            console.error('Error fetching users:', error);
-        }
     }
 
     handleAddNewUser = () => {
@@ -47,6 +49,21 @@ class UserManage extends Component {
         })
     }
     
+    createNewUser =async (data) => {
+        try {
+        let response = await createNewUserService(data);
+        if(response && response.errCode !== 0) {
+            alert(response.errMessage);
+        }else{
+            await this.getAllUserFromReact()
+            this.setState({
+                isOpenModalUser: false
+            })
+        }
+        } catch (error) {
+            console.log(error);
+        }
+       }
 
 
     render() {
@@ -56,7 +73,7 @@ class UserManage extends Component {
                 <ModalUser
                 isOpen={this.state.isOpenModalUser}
                 toggleFromParent={this.toggleUserModal}
-                test={'abc'}
+                createNewUser={this.createNewUser}
                 />
                 <div className='title text-center'>Manage User</div>
                 <div className='mx-3'>
@@ -65,7 +82,9 @@ class UserManage extends Component {
                         <i className='fas fa-plus'></i> Add new user</button>
                 </div>
                 <div className='users-table mt-4 mx-3'>
+                    
                 <table id="customers">
+                
                     <tr>
                         <th>Email</th>
                         <th>First Name</th>
@@ -91,7 +110,7 @@ class UserManage extends Component {
                         })
                             
                         }
-                        
+                    
                     
                     </table>
                 </div>
